@@ -8,12 +8,20 @@ import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var rvHeroes: RecyclerView
     private var list: ArrayList<Hero> = arrayListOf()
     private var title: String = "Mode List"
+
+    private var mode: Int = 0
+
+    companion object {
+        private const val STATE_TITLE = "state_string"
+        private const val STATE_LIST = "state_list"
+        private const val STATE_MODE = "state_mode"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,13 +29,48 @@ class MainActivity : AppCompatActivity() {
 
 //        supportActionBar?.title = ""
 
-        rvHeroes = findViewById(R.id.rv_heroes)
-        rvHeroes.setHasFixedSize(true)
+        rv_heroes.setHasFixedSize(true)
 
-        list.addAll(HeroesData.listData)
+        if (savedInstanceState == null){
+            setActionBarTitle(title)
+            list.addAll(getListHeroes())
+            showRecyclerList()
+            mode = R.id.action_list
+        }else{
+            title = savedInstanceState.getString(STATE_TITLE).toString()
+            val stateList = savedInstanceState.getParcelableArrayList<Hero>(STATE_LIST)
+            val stateMode = savedInstanceState.getInt(STATE_MODE)
 
+            setActionBarTitle(title)
+            if (stateList != null){
+                list.addAll(stateList)
+            }
+
+            setMode(stateMode)
+        }
+
+        //list.addAll(HeroesData.listData)
+        list.addAll(getListHeroes())
         setActionBarTitle(title)
         showRecyclerList()
+    }
+
+    private fun getListHeroes(): ArrayList<Hero>{
+        val dataName = resources.getStringArray(R.array.data_name)
+        val dataDescription = resources.getStringArray(R.array.data_description)
+        val dataPhoto = resources.getStringArray(R.array.data_photo)
+
+        val listHero = ArrayList<Hero>()
+        for (position in dataName.indices){
+            val hero = Hero(
+                dataName[position],
+                dataDescription[position],
+                dataPhoto[position]
+            )
+            listHero.add(hero)
+        }
+
+        return listHero
     }
 
     private fun setActionBarTitle(title: String){
@@ -35,9 +78,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showRecyclerCardView(){
-        rvHeroes.layoutManager = LinearLayoutManager(this)
+        rv_heroes.layoutManager = LinearLayoutManager(this)
         val cardViewHeroAdapter = CardViewHeroAdapter(list)
-        rvHeroes.adapter = cardViewHeroAdapter
+        rv_heroes.adapter = cardViewHeroAdapter
 
         cardViewHeroAdapter.setOnItemClickCallback(object: CardViewHeroAdapter.OnItemClickCallback{
             override fun onItemClicked(data: Hero) {
@@ -47,9 +90,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showRecyclerGrid() {
-        rvHeroes.layoutManager = GridLayoutManager(this, 2)
+        rv_heroes.layoutManager = GridLayoutManager(this, 2)
         val gridHeroAdapter = GridHeroAdapter(list)
-        rvHeroes.adapter = gridHeroAdapter
+        rv_heroes.adapter = gridHeroAdapter
 
         gridHeroAdapter.setOnItemClickCallback(object: GridHeroAdapter.OnItemClickCallback{
             override fun onItemClicked(data: Hero) {
@@ -59,9 +102,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showRecyclerList() {
-        rvHeroes.layoutManager = LinearLayoutManager(this)
+        rv_heroes.layoutManager = LinearLayoutManager(this)
         val listHeroAdapter = ListHeroAdapter(list)
-        rvHeroes.adapter = listHeroAdapter
+        rv_heroes.adapter = listHeroAdapter
 
         listHeroAdapter.setOnItemClickCallback(object : ListHeroAdapter.OnItemClickCallback{
             override fun onItemClicked(data: Hero) {

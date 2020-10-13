@@ -20,7 +20,7 @@ class CardViewHeroAdapter(private val listHero: ArrayList<Hero>) : RecyclerView.
         return listHero.size
     }
 
-    private lateinit var onItemClickCallback: OnItemClickCallback
+    private var onItemClickCallback: OnItemClickCallback? = null
 
     fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback){
         this.onItemClickCallback = onItemClickCallback
@@ -48,7 +48,7 @@ class CardViewHeroAdapter(private val listHero: ArrayList<Hero>) : RecyclerView.
             Toast.makeText(holder.itemView.context, "Kamu memilih " + listHero[holder.adapterPosition].name, Toast.LENGTH_SHORT).show()
         }
 
-        holder.itemView.setOnClickListener { onItemClickCallback.onItemClicked(listHero[holder.adapterPosition]) }
+        holder.itemView.setOnClickListener { onItemClickCallback?.onItemClicked(listHero[holder.adapterPosition]) }
     }
 
     inner class CardViewViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {

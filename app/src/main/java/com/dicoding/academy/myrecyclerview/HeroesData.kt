@@ -34,16 +34,16 @@ object HeroesData{
         R.drawable.supomo,
         R.drawable.tan_malaka)
 
-    val listData: ArrayList<Hero>
-        get() {
-            val list = arrayListOf<Hero>()
-            for (position in heroesName.indices){
-                val hero = Hero()
-                hero.name = heroesName[position]
-                hero.detail = heroDetails[position]
-                hero.photo = heroesImages[position]
-                list.add(hero)
-            }
-            return list
-        }
+//    val listData: ArrayList<Hero>
+//        get() {
+//            val list = arrayListOf<Hero>()
+//            for (position in heroesName.indices){
+//                val hero = Hero()
+//                hero.name = heroesName[position]
+//                hero.detail = heroDetails[position]
+//                hero.photo = heroesImages[position]
+//                list.add(hero)
+//            }
+//            return list
+//        }
 }
